@@ -2,13 +2,13 @@
 # This fixes the cedilha/cedilla in Ubuntu 16.04 if you are using English (US, alternative international) keyboard. If you are using other version or keyboard layout let me know if this worked for you.
 # This script is based on https://bugs.launchpad.net/ubuntu/+source/ibus/+bug/518056/comments/39
 
+tested_os_name=Ubuntu
+tested_os_version=(16.04 14.04)
 os_name=$(lsb_release -is)
 os_version=$(lsb_release -rs)
-tested_os_name=Ubuntu
-tested_os_version=16.04
 
 # os name and version verification
-if [ "${os_name}" != "${tested_os_name}" ] || [ "${os_version}" != "${tested_os_version}" ]; then
+if [ "${os_name}" != "${tested_os_name}" ] && [[ -n "${tested_os_version[$os_version]}" ]]; then
 	echo "This script has only been tested with $tested_os_name $tested_os_version and you are on $os_name $os_version. Aborting."
 	exit 1
 fi
@@ -40,9 +40,7 @@ append_to_env() {
    fi
 }
 
-append_to_env PATH
 append_to_env GTK_IM_MODULE=cedilla
+append_to_env QT_IM_MODULE=cedilla
 
-echo "Restart your computer and try ç	."
-
-
+echo "Restart your computer and try ç."
