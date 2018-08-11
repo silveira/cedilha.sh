@@ -1,16 +1,56 @@
 #!/bin/bash
-# This fixes the cedilha/cedilla in Ubuntu 16.04 if you are using English (US, alternative international) keyboard. If you are using other version or keyboard layout let me know if this worked for you.
-# This script is based on https://bugs.launchpad.net/ubuntu/+source/ibus/+bug/518056/comments/39
+# This fixes the cedilha/cedilla in Ubuntu 14.04 and over if you are using 
+# English (US, alternative international) keyboard. If you are using other 
+# version or keyboard layout let me know if this worked for you.
+# This script is based on the following bugtrack:
+# https://bugs.launchpad.net/ubuntu/+source/ibus/+bug/518056/comments/39
 
-tested_os_name=Ubuntu
-tested_os_version=(16.04 14.04)
-os_name=$(lsb_release -is)
-os_version=$(lsb_release -rs)
+
+
+# Using /etc/os-release rather than lsb_release because it will support 
+# distributions which derives from Ubuntu, such as LinuxMint.
+# lsb_release does not display this kind of information. 
+# See: https://www.freedesktop.org/software/systemd/man/os-release.html 
+#
+# HINT: A list of /etc/os-releases can be found here: 
+# https://gitlab.com/zygoon/os-release-zoo
+#
+# TODO: Test agaist Debian itself. It might work.
+if [ -f /etc/os-release ]; then 
+   tested_os_name=ubuntu
+   tested_os_version=(14.04 16.04 18.04) 
+   tested_ubuntu_codenames=(xenial bionic)
+   source /etc/os-release
+   # TODO: We should be evaluating $UBUNTU_CODENAME rather than VERSION_ID. This 
+   # approach would make our script work with Ubuntu and its variations with 
+   # less 'if' statements. We could even remove 'tested_os_name' and 'os_name'.
+   #
+   # Unfortunately, this was introduced in 2016 and it is not merged back into 
+   # 14.04/Trusty Tar. Maybe in April 2019 when it reaches its own EOL we could
+   # use it. More info: https://github.com/systemd/systemd/issues/3429
+   if [ -z $UBUNTU_CODENAME ]; then
+      os_name=$ID
+      os_version=$VERSION_ID
+   else
+      # Wen can assume it will work since it has the same Ubuntu codename.
+      # Otherwise, we should expand $tested_os_name to other Ubuntu variants.
+      os_name=ubuntu
+      os_version=$UBUNTU_CODENAME
+   fi
+else
+   # Althought Ubuntu 12.04 had this file, I'm keeping this older version in case somebody needs it.
+   tested_os_name=Ubuntu
+   tested_os_version=(16.04 14.04)
+   os_name=$(lsb_release -is)
+   os_version=$(lsb_release -rs)
+fi 
+
+echo $os_name $os_version
 
 # os name and version verification
 if [ "${os_name}" != "${tested_os_name}" ] && [[ -n "${tested_os_version[$os_version]}" ]]; then
-	echo "This script has only been tested with $tested_os_name $tested_os_version and you are on $os_name $os_version. Aborting."
-	exit 1
+   echo "This script has only been tested with $tested_os_name $tested_os_version and you are on $os_name $os_version. Aborting."
+   exit 1
 fi
 
 # root privileges verification

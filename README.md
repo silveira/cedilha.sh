@@ -1,2 +1,2 @@
 # cedilha.sh
-Fix ç (cedilha) on Ubuntu 16.04 when using EN keyboard layout.
+Fix ç (cedilha) on Ubuntu and its variants when using EN keyboard layout.
