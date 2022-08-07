@@ -5,7 +5,7 @@
 # This script is based on the following bugtrack:
 # https://bugs.launchpad.net/ubuntu/+source/ibus/+bug/518056/comments/39
 
-
+set -euxo pipefail
 
 # Using /etc/os-release rather than lsb_release because it will support
 # distributions which derives from Ubuntu, such as LinuxMint.
