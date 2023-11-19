@@ -7,6 +7,13 @@
 
 set -euxo pipefail
 
+# root privileges verification
+if [ "$EUID" -ne 0 ]; then
+  echo "This script requires root privileges."
+  echo "Try: sudo $0"
+  exit 1
+fi
+
 # Using /etc/os-release rather than lsb_release because it will support
 # distributions which derives from Ubuntu, such as LinuxMint.
 # lsb_release does not display this kind of information.
@@ -51,12 +58,6 @@ echo $os_name $os_version
 if [ "${os_name}" != "${tested_os_name}" ] && [[ -n "${tested_os_version[$os_version]}" ]]; then
    echo "This script has only been tested with $tested_os_name $tested_os_version and you are on $os_name $os_version. Aborting."
    exit 1
-fi
-
-# root privileges verification
-if [ "$EUID" -ne 0 ]
-  then echo "This script requires root privileges."
-  exit 1
 fi
 
 # change gtk configuration (32 or 64 bits)
