@@ -25,7 +25,7 @@ fi
 # TODO: Test agaist Debian itself. It might work.
 if [ -f /etc/os-release ]; then
    tested_os_name=ubuntu
-   tested_os_version=(14.04 16.04 18.04 20.04 22.04)
+   tested_os_version=(14.04 16.04 18.04 20.04 22.04 24.04)
    tested_ubuntu_codenames=(xenial bionic focal jammy)
    source /etc/os-release
    # TODO: We should be evaluating $UBUNTU_CODENAME rather than VERSION_ID. This
