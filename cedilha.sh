@@ -1,7 +1,7 @@
 #!/bin/bash
 # This fixes the cedilha/cedilla in Ubuntu 14.04 and over if you are using
-# English (US, alternative international) keyboard. If you are using other
-# version or keyboard layout let me know if this worked for you.
+# English (US, alternative international) keyboard. Let me know if this 
+# works for you if you are using another version or keyboard layout.
 # This script is based on the following bugtrack:
 # https://bugs.launchpad.net/ubuntu/+source/ibus/+bug/518056/comments/39
 
@@ -15,25 +15,25 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Using /etc/os-release rather than lsb_release because it will support
-# distributions which derives from Ubuntu, such as LinuxMint.
+# distributions derived from Ubuntu, such as LinuxMint.
 # lsb_release does not display this kind of information.
 # See: https://www.freedesktop.org/software/systemd/man/os-release.html
 #
 # HINT: A list of /etc/os-releases can be found here:
 # https://gitlab.com/zygoon/os-release-zoo
 #
-# TODO: Test agaist Debian itself. It might work.
+# TODO: Test against Debian itself. I think it might work.
 if [ -f /etc/os-release ]; then
    tested_os_name=ubuntu
    tested_os_version=(14.04 16.04 18.04 20.04 22.04 24.04)
-   tested_ubuntu_codenames=(xenial bionic focal jammy)
+   tested_ubuntu_codenames=(xenial bionic focal jammy noble)
    source /etc/os-release
    # TODO: We should be evaluating $UBUNTU_CODENAME rather than VERSION_ID. This
    # approach would make our script work with Ubuntu and its variations with
    # less 'if' statements. We could even remove 'tested_os_name' and 'os_name'.
    #
-   # Unfortunately, this was introduced in 2016 and it is not merged back into
-   # 14.04/Trusty Tar. Maybe in April 2019 when it reaches its own EOL we could
+   # Unfortunately, this was introduced in 2016, and it is not merged back into
+   # 14.04/Trusty Tar. Maybe in April 2019, when it reaches its own EOL, we could
    # use it. More info: https://github.com/systemd/systemd/issues/3429
    if [ -z $UBUNTU_CODENAME ]; then
       os_name=$ID
@@ -45,7 +45,7 @@ if [ -f /etc/os-release ]; then
       os_version=$UBUNTU_CODENAME
    fi
 else
-   # Althought Ubuntu 12.04 had this file, I'm keeping this older version in case somebody needs it.
+   # Although Ubuntu 12.04 had this file, I'm keeping this older version in case somebody needs it.
    tested_os_name=Ubuntu
    tested_os_version=(16.04 14.04)
    os_name=$(lsb_release -is)
@@ -60,7 +60,7 @@ if [ "${os_name}" != "${tested_os_name}" ] && [[ -n "${tested_os_version[$os_ver
    exit 1
 fi
 
-# change gtk configuration (32 or 64 bits)
+# change GTK configuration (32 or 64 bits)
 architecture=$(uname -m)
 if [ "${architecture}" == "x86_64" ]; then
    sed -i.bak 's#"cedilla" "Cedilla" "gtk30" "/usr/share/locale" "az:ca:co:fr:gv:oc:pt:sq:tr:wa"#"cedilla" "Cedilla" "gtk30" "/usr/share/locale" "az:ca:co:fr:gv:oc:pt:sq:tr:wa:en"#g' /usr/lib/x86_64-linux-gnu/gtk-3.0/3.0.0/immodules.cache
